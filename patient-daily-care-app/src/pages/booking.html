@@ -1,0 +1,86 @@
+<div class="page" data-name="booking">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="title">Service Booking</div>
+      <div class="right">
+        <a href="/" class="link">Home</a>
+      </div>
+    </div>
+  </div>
+  <div class="page-content">
+    <form id="booking-form" class="list no-hairlines-md">
+      <ul>
+        <li class="item-content item-input">
+          <div class="item-inner">
+            <div class="item-title item-label">Name</div>
+            <div class="item-input-wrap">
+              <input type="text" name="name" placeholder="Your full name" required />
+            </div>
+          </div>
+        </li>
+        <li class="item-content item-input">
+          <div class="item-inner">
+            <div class="item-title item-label">Service</div>
+            <div class="item-input-wrap">
+              <select name="service" required>
+                <option value="" disabled selected>Select service</option>
+                <option value="nursing">Nursing</option>
+                <option value="physiotherapy">Physiotherapy</option>
+                <option value="personal-care">Personal Care</option>
+              </select>
+            </div>
+          </div>
+        </li>
+        <li class="item-content item-input">
+          <div class="item-inner">
+            <div class="item-title item-label">Address</div>
+            <div class="item-input-wrap">
+              <input type="text" name="address" id="address" placeholder="Your address" readonly required />
+            </div>
+          </div>
+        </li>
+        <li class="item-content">
+          <div class="item-inner">
+            <button type="button" id="get-location" class="button button-fill">Get Current Location</button>
+          </div>
+        </li>
+        <li class="item-content">
+          <div class="item-inner">
+            <button type="submit" class="button button-fill">Book Service</button>
+          </div>
+        </li>
+      </ul>
+    </form>
+  </div>
+</div>
+
+<script>
+  var bookingForm = document.getElementById('booking-form');
+  var addressInput = document.getElementById('address');
+  var getLocationBtn = document.getElementById('get-location');
+
+  getLocationBtn.addEventListener('click', function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        addressInput.value = 'Lat: ' + lat.toFixed(5) + ', Lon: ' + lon.toFixed(5);
+      }, function (error) {
+        alert('Error getting location: ' + error.message);
+      });
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
+  });
+
+  bookingForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(bookingForm);
+    var bookingData = {};
+    formData.forEach(function (value, key) {
+      bookingData[key] = value;
+    });
+    alert('Booking submitted: ' + JSON.stringify(bookingData));
+    bookingForm.reset();
+  });
+</script>
