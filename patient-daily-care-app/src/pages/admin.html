@@ -1,0 +1,88 @@
+<div class="page" data-name="admin">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="title">Admin Dashboard</div>
+      <div class="right">
+        <a href="/" class="link">Home</a>
+      </div>
+    </div>
+  </div>
+  <div class="page-content">
+    <div class="block-title">Booking List</div>
+    <div class="list media-list" id="booking-list">
+      <!-- Booking items will be appended here -->
+    </div>
+
+    <div class="block-title">Nurse Duty Schedule</div>
+    <div class="block">
+      <input type="date" id="schedule-date" />
+      <input type="text" id="nurse-name" placeholder="Nurse Name" />
+      <button id="add-schedule" class="button button-fill">Add Schedule</button>
+    </div>
+    <div class="list" id="schedule-list">
+      <!-- Schedule items will be appended here -->
+    </div>
+  </div>
+</div>
+
+<script>
+  var bookingList = document.getElementById('booking-list');
+  var scheduleList = document.getElementById('schedule-list');
+  var addScheduleBtn = document.getElementById('add-schedule');
+  var scheduleDateInput = document.getElementById('schedule-date');
+  var nurseNameInput = document.getElementById('nurse-name');
+
+  // Mock booking data
+  var bookings = [
+    { name: 'John Doe', service: 'Nursing', address: 'Lat: 12.34567, Lon: 76.54321' },
+    { name: 'Jane Smith', service: 'Physiotherapy', address: 'Lat: 23.45678, Lon: 65.43210' }
+  ];
+
+  function renderBookings() {
+    bookingList.innerHTML = '';
+    bookings.forEach(function (booking) {
+      var item = document.createElement('div');
+      item.className = 'item-content';
+      item.innerHTML = '<div class="item-inner"><div class="item-title-row"><div class="item-title">' + booking.name + '</div></div><div class="item-subtitle">' + booking.service + '</div><div class="item-text">' + booking.address + '</div></div>';
+      bookingList.appendChild(item);
+    });
+  }
+
+  var schedules = [];
+
+  function renderSchedules() {
+    scheduleList.innerHTML = '';
+    schedules.forEach(function (schedule, index) {
+      var item = document.createElement('div');
+      item.className = 'item-content';
+      item.innerHTML = '<div class="item-inner"><div class="item-title-row"><div class="item-title">' + schedule.nurse + '</div><div class="item-after"><a href="#" data-index="' + index + '" class="delete-schedule">Delete</a></div></div><div class="item-subtitle">' + schedule.date + '</div></div>';
+      scheduleList.appendChild(item);
+    });
+
+    var deleteButtons = document.querySelectorAll('.delete-schedule');
+    deleteButtons.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var idx = parseInt(this.getAttribute('data-index'));
+        schedules.splice(idx, 1);
+        renderSchedules();
+      });
+    });
+  }
+
+  addScheduleBtn.addEventListener('click', function () {
+    var date = scheduleDateInput.value;
+    var nurse = nurseNameInput.value.trim();
+    if (!date || !nurse) {
+      alert('Please enter both date and nurse name.');
+      return;
+    }
+    schedules.push({ date: date, nurse: nurse });
+    renderSchedules();
+    scheduleDateInput.value = '';
+    nurseNameInput.value = '';
+  });
+
+  renderBookings();
+  renderSchedules();
+</script>
